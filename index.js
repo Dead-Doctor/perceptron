@@ -81,28 +81,28 @@ class Layer {
 
     rngRect() {
         ////// Random Rect 1 //////
-        // const x = randomRange(0, this.size / 2);
-        // const y = randomRange(0, this.size / 2);
-        // const width = randomRange(this.size / 2 - x, this.size - x);
-        // const height = randomRange(this.size / 2 - y, this.size - y);
+        const x = randomRange(0, this.size / 2);
+        const y = randomRange(0, this.size / 2);
+        const width = randomRange(this.size / 2 - x, this.size - x);
+        const height = randomRange(this.size / 2 - y, this.size - y);
         ////// Random Rect 2 //////
-        const width = randomRange(1, this.size);
-        const height = randomRange(1, this.size);
-        const x = randomRange(0, this.size - width);
-        const y = randomRange(0, this.size - height);
+        // const width = randomRange(1, this.size);
+        // const height = randomRange(1, this.size);
+        // const x = randomRange(0, this.size - width);
+        // const y = randomRange(0, this.size - height);
         ///////////////////////////
         this.fillRect(x, y, width, height, 1);
     }
 
     rngCircle() {
         ////// Random Circle 1 //////
-        // const x = randomRange(this.size / 4, (this.size / 4) * 3);
-        // const y = randomRange(this.size / 4, (this.size / 4) * 3);
-        // const radius = randomRange(this.size / 4 - 1, Math.min(x, y, this.size - x, this.size - y));
+        const x = randomRange(this.size / 4, (this.size / 4) * 3);
+        const y = randomRange(this.size / 4, (this.size / 4) * 3);
+        const radius = randomRange(this.size / 4 - 1, Math.min(x, y, this.size - x, this.size - y));
         ////// Random Circle 2 //////
-        const radius = randomRange(1, this.size / 2);
-        const x = randomRange(radius, this.size - radius);
-        const y = randomRange(radius, this.size - radius);
+        // const radius = randomRange(1, this.size / 2);
+        // const x = randomRange(radius, this.size - radius);
+        // const y = randomRange(radius, this.size - radius);
         /////////////////////////////
         this.fillCircle(x, y, radius, -1);
     }
@@ -127,13 +127,29 @@ class Layer {
 }
 
 const showLogs = false;
+const record = true;
+const recordFrames = 1_200;
 
 const totalShapes = 100_000;
 const size = 64;
 const weights = new Layer(size);
 
+let frames = '';
+let frameTime = 2.82;
+
+function recordFrame(i, layer) {
+    frameTime -= Math.pow(1.045, -i * 10);
+
+    const name = `video/frame-${i.toString().padStart(4, '0')}`;
+    layer.saveDebug(name, 10);
+    frames += `file '${name}.ppm'\n`;
+    frames += `duration ${frameTime}\n`;
+}
+
 // Train the network -----------------------------------------------------------------------------------------------
 for (let i = 0; i < totalShapes; i++) {
+    if (record && i < recordFrames) recordFrame(i, weights);
+
     if (showLogs) console.log(`${i}. Input`);
 
     // Rectangle
@@ -150,6 +166,8 @@ for (let i = 0; i < totalShapes; i++) {
 }
 
 weights.saveDebug('trainedWeights', 32);
+
+if (record) writeFileSync('frames.txt', frames);
 
 // Test the network -------------------------------------------------------------------------------------------------
 

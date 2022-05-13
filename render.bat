@@ -1,0 +1,1 @@
+ffmpeg -f concat -safe 0 -i frames.txt -vf scale=1024x1024:flags=neighbor -pix_fmt yuv420p frames.mov -y
