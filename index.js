@@ -168,5 +168,5 @@ for (let i = 0; i < totalTests; i++) {
 totalRectTestLayer.saveDebug('rectTest', 1000);
 totalCircleTestLayer.saveDebug('circleTest', 1000);
 
-console.log(`Rect Test Output: ${(correctRectTests / totalTests) * 100}%`);
-console.log(`Circle Test Output: ${(correctCircleTests / totalTests) * 100}%`);
+console.log(`Rect Test Output: ${Math.round((correctRectTests / totalTests) * 1000) / 10}%`);
+console.log(`Circle Test Output: ${Math.round((correctCircleTests / totalTests) * 1000) / 10}%`);
