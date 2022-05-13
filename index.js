@@ -80,17 +80,30 @@ class Layer {
     }
 
     rngRect() {
-        const x = randomRange(0, this.size / 2);
-        const y = randomRange(0, this.size / 2);
-        const width = randomRange(this.size / 2 - x, this.size - x);
-        const height = randomRange(this.size / 2 - y, this.size - y);
+        ////// Random Rect 1 //////
+        // const x = randomRange(0, this.size / 2);
+        // const y = randomRange(0, this.size / 2);
+        // const width = randomRange(this.size / 2 - x, this.size - x);
+        // const height = randomRange(this.size / 2 - y, this.size - y);
+        ////// Random Rect 2 //////
+        const width = randomRange(1, this.size);
+        const height = randomRange(1, this.size);
+        const x = randomRange(0, this.size - width);
+        const y = randomRange(0, this.size - height);
+        ///////////////////////////
         this.fillRect(x, y, width, height, 1);
     }
 
     rngCircle() {
-        const x = randomRange(this.size / 4, (this.size / 4) * 3);
-        const y = randomRange(this.size / 4, (this.size / 4) * 3);
-        const radius = randomRange(this.size / 4 - 1, Math.min(x, y, this.size - x, this.size - y));
+        ////// Random Circle 1 //////
+        // const x = randomRange(this.size / 4, (this.size / 4) * 3);
+        // const y = randomRange(this.size / 4, (this.size / 4) * 3);
+        // const radius = randomRange(this.size / 4 - 1, Math.min(x, y, this.size - x, this.size - y));
+        ////// Random Circle 2 //////
+        const radius = randomRange(1, this.size / 2);
+        const x = randomRange(radius, this.size - radius);
+        const y = randomRange(radius, this.size - radius);
+        /////////////////////////////
         this.fillCircle(x, y, radius, -1);
     }
 
@@ -168,5 +181,5 @@ for (let i = 0; i < totalTests; i++) {
 totalRectTestLayer.saveDebug('rectTest', 1000);
 totalCircleTestLayer.saveDebug('circleTest', 1000);
 
-console.log(`Rect Test Output: ${Math.round((correctRectTests / totalTests) * 1000) / 10}%`);
-console.log(`Circle Test Output: ${Math.round((correctCircleTests / totalTests) * 1000) / 10}%`);
+console.log(`Rectangle Test Output: ${Math.round((correctRectTests / totalTests) * 1000) / 10}%`);
+console.log(`Circle    Test Output: ${Math.round((correctCircleTests / totalTests) * 1000) / 10}%`);
