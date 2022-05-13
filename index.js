@@ -6,9 +6,7 @@ function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min - 1)) + min;
 }
 
-function valueToColor(value) {
-    const expectedRange = 32;
-
+function valueToColor(value, expectedRange) {
     // normalize values using sigmoid function to -255 to 255
     let absolute = 255 / (1 + Math.exp(-value / expectedRange));
 
@@ -40,14 +38,14 @@ class Layer {
     }
 
     // Save im PPM format
-    saveDebug(name) {
+    saveDebug(name, expectedRange) {
         const fileName = name + '.ppm';
         writeFileSync(fileName, `P6 ${this.size} ${this.size} 255\n`);
 
         let data = [];
         for (let y = 0; y < this.size; y++) {
             for (let x = 0; x < this.size; x++) {
-                data.push(...valueToColor(this.grid[y][x]));
+                data.push(...valueToColor(this.grid[y][x], expectedRange));
             }
         }
         appendFileSync(fileName, Buffer.from(data));
@@ -138,14 +136,14 @@ for (let i = 0; i < totalShapes; i++) {
     if (output <= 0) weights.addInput(input);
 }
 
-weights.saveDebug('trainedWeights');
+weights.saveDebug('trainedWeights', 32);
 
 // Test the network -------------------------------------------------------------------------------------------------
 
 const totalTests = 1_000;
 
-let avgRectTestOutput = 0;
-let avgCircleTestOutput = 0;
+let correctRectTests = 0;
+let correctCircleTests = 0;
 const totalRectTestLayer = new Layer(size);
 const totalCircleTestLayer = new Layer(size);
 
@@ -157,18 +155,18 @@ for (let i = 0; i < totalTests; i++) {
     rectTestLayer.rngRect();
     totalRectTestLayer.addInput(rectTestLayer);
     let rectTestOutput = weights.feedForward(rectTestLayer);
-    avgRectTestOutput += rectTestOutput;
+    if (rectTestOutput > 0) correctRectTests++;
 
     // Circle
     const circleTestLayer = new Layer(size);
     circleTestLayer.rngCircle();
     totalCircleTestLayer.addInput(circleTestLayer);
     let circleTestOutput = weights.feedForward(circleTestLayer);
-    avgCircleTestOutput += circleTestOutput;
+    if (circleTestOutput > 0) correctCircleTests++;
 }
 
-totalRectTestLayer.saveDebug('rectTest');
-totalCircleTestLayer.saveDebug('circleTest');
+totalRectTestLayer.saveDebug('rectTest', 1000);
+totalCircleTestLayer.saveDebug('circleTest', 1000);
 
-console.log(`Rect Test Output: ${avgRectTestOutput / totalTests}`);
-console.log(`Circle Test Output: ${avgCircleTestOutput / totalTests}`);
+console.log(`Rect Test Output: ${(correctRectTests / totalTests) * 100}%`);
+console.log(`Circle Test Output: ${(correctCircleTests / totalTests) * 100}%`);
