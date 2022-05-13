@@ -1,0 +1,13 @@
+{
+    "name": "perceptron",
+    "description": "Perceptron inpired by Veritasium",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [],
+    "author": "DeadDoctor",
+    "license": "ISC",
+    "type": "module"
+}

@@ -1,0 +1,1 @@
+magick %1 -scale 400%% %1.png
